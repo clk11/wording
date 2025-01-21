@@ -55,6 +55,40 @@ const config: Config = {
   			lg: 'var(--radius)',
   			md: 'calc(var(--radius) - 2px)',
   			sm: 'calc(var(--radius) - 4px)'
+  		},
+  		keyframes: {
+  			"progress-infinite": {
+  				"0%": { transform: "translateX(-100%)" },
+  				"50%": { transform: "translateX(0%)" },
+  				"100%": { transform: "translateX(100%)" }
+  			},
+  			"gradient-shift": {
+  				"0%, 100%": {
+  					"background-size": "200% 200%",
+  					"background-position": "left center"
+  				},
+  				"50%": {
+  					"background-size": "200% 200%",
+  					"background-position": "right center"
+  				}
+  			},
+  			float: {
+  				"0%, 100%": {
+  					transform: "translateY(0)",
+  					opacity: "0.3"
+  				},
+  				"50%": {
+  					transform: "translateY(-10px)",
+  					opacity: "0.6"
+  				}
+  			}
+  		},
+  		animation: {
+  			"progress-infinite": "progress-infinite 2s ease-in-out infinite",
+  			"gradient-shift": "gradient-shift 4s ease-in-out infinite",
+  			"float": "float 3s ease-in-out infinite",
+  			"float-slow": "float 4s ease-in-out infinite",
+  			"float-slower": "float 5s ease-in-out infinite",
   		}
   	}
   },

@@ -5,6 +5,7 @@ import InputSection from "@/components/InputSection"
 import ProcessingAnimation from "@/components/ProcessingAnimation"
 import StatusMessage from "@/components/StatusMessage"
 import Modal from "@/components/Modal"
+import { ThemeToggle } from "@/components/ui/theme-toggle"
 
 export default function Home() {
   const [message, setMessage] = useState("")
@@ -30,17 +31,18 @@ export default function Home() {
   }
 
   return (
-    <main className="h-screen flex flex-col">
-      <div className="flex-1 flex flex-col bg-gray-50">
-        <div className="flex-1 h-screen p-4 md:p-6">
-          <div className="h-full bg-white shadow-lg rounded-lg overflow-hidden flex flex-col">
-            <div className="flex-1 p-4 overflow-y-auto flex flex-col justify-end">
-              <div className="space-y-4">
+    <main className="min-h-screen bg-gradient-to-b from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800 transition-all duration-200">
+      <ThemeToggle />
+      <div className="container mx-auto max-w-4xl px-4 py-8">
+        <div className="bg-white/80 dark:bg-gray-800/50 backdrop-blur-sm shadow-2xl rounded-2xl overflow-hidden transition-all duration-200">
+          <div className="flex flex-col h-[80vh]">
+            <div className="flex-1 p-6 overflow-y-auto flex flex-col justify-end">
+              <div className="space-y-6">
                 {isProcessing && <ProcessingAnimation />}
                 {isComplete && <StatusMessage message={message} onClick={() => setShowModal(true)} />}
               </div>
             </div>
-            <div className="border-t mt-auto">
+            <div className="border-t border-gray-200/10 dark:border-gray-700/30">
               <InputSection onSubmit={handleSubmit} />
             </div>
           </div>
