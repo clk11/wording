@@ -12,6 +12,7 @@ import { ChevronUp } from "lucide-react"
 interface StatusItem {
   id: number
   message: string
+  colorIndex: number
 }
 
 const MESSAGES_PER_PAGE = 5
@@ -31,7 +32,8 @@ export default function Home() {
         setIsProcessing(false)
         setStatusMessages(prev => [...prev, {
           id: Date.now(),
-          message
+          message,
+          colorIndex: prev.length % 4
         }])
       }, 2000)
 
@@ -93,7 +95,7 @@ export default function Home() {
                     key={status.id}
                     message={status.message}
                     onClick={() => setShowModal(status)}
-                    index={index}
+                    index={status.colorIndex}
                   />
                 ))}
                 {isProcessing && <ProcessingAnimation />}
@@ -110,6 +112,7 @@ export default function Home() {
         <Modal 
           message={showModal.message} 
           onClose={() => setShowModal(null)} 
+          colorIndex={showModal.colorIndex}
         />
       )}
     </main>
