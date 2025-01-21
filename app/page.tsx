@@ -9,10 +9,9 @@ import { ThemeToggle } from "@/components/ui/theme-toggle"
 import { Button } from "@/components/ui/button"
 import { ChevronUp } from "lucide-react"
 
-interface StatusItem {
+export interface StatusItem {
   id: number
   message: string
-  colorIndex: number
 }
 
 const MESSAGES_PER_PAGE = 5
@@ -21,7 +20,8 @@ export default function Home() {
   const [message, setMessage] = useState("")
   const [isProcessing, setIsProcessing] = useState(false)
   const [statusMessages, setStatusMessages] = useState<StatusItem[]>([])
-  const [showModal, setShowModal] = useState<StatusItem | null>(null)
+  const [showModal, setShowModal] = useState(false)
+  const [selectedMessage, setSelectedMessage] = useState<StatusItem | null>(null)
   const [visibleMessages, setVisibleMessages] = useState(MESSAGES_PER_PAGE)
   const [isLoadingMore, setIsLoadingMore] = useState(false)
   const messagesEndRef = useRef<HTMLDivElement>(null)
@@ -30,11 +30,11 @@ export default function Home() {
     if (isProcessing) {
       const timer = setTimeout(() => {
         setIsProcessing(false)
-        setStatusMessages(prev => [...prev, {
+        const newMessage: StatusItem = {
           id: Date.now(),
-          message,
-          colorIndex: prev.length % 4
-        }])
+          message
+        }
+        setStatusMessages(prev => [...prev, newMessage])
       }, 2000)
 
       return () => clearTimeout(timer)
@@ -42,8 +42,10 @@ export default function Home() {
   }, [isProcessing, message])
 
   useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" })
-  }, [statusMessages.length])
+    if (messagesEndRef.current) {
+      messagesEndRef.current.scrollIntoView({ behavior: "smooth" })
+    }
+  }, [statusMessages])
 
   const handleSubmit = (submittedMessage: string) => {
     setMessage(submittedMessage)
@@ -61,6 +63,11 @@ export default function Home() {
 
   const visibleStatusMessages = statusMessages.slice(-visibleMessages)
   const hasMoreMessages = statusMessages.length > visibleMessages
+
+  const handleMessageClick = (message: StatusItem) => {
+    setSelectedMessage(message)
+    setShowModal(true)
+  }
 
   return (
     <main className="min-h-screen bg-gradient-to-b from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800 transition-all duration-200">
@@ -94,8 +101,8 @@ export default function Home() {
                   <StatusMessage 
                     key={status.id}
                     message={status.message}
-                    onClick={() => setShowModal(status)}
-                    index={status.colorIndex}
+                    onClick={() => handleMessageClick(status)}
+                    index={index}
                   />
                 ))}
                 {isProcessing && <ProcessingAnimation />}
@@ -108,13 +115,12 @@ export default function Home() {
           </div>
         </div>
       </div>
-      {showModal && (
-        <Modal 
-          message={showModal.message} 
-          onClose={() => setShowModal(null)} 
-          colorIndex={showModal.colorIndex}
-        />
-      )}
+      <Modal
+        isOpen={showModal}
+        onClose={() => setShowModal(false)}
+        message={selectedMessage}
+        colorIndex={statusMessages.findIndex(m => m.id === selectedMessage?.id)}
+      />
     </main>
   )
 }
